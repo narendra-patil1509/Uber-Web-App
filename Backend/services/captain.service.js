@@ -6,4 +6,20 @@ module.exports.createCaptain = async ({
     if(!firstname || !email || !password || !color || !plate || !capacity || !vehicleType) {
         throw new Error('All fields are reuired')
     }
+    const captain = captainModel.create({
+        fullname:{
+            firstname,
+            lastname
+        },
+        email,
+        password,
+        vehicle:{
+            color,
+            plate,
+            capacity,
+            vehicleType
+        }
+    })
+
+    return captain;
 }
