@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import UserDataContext from '../context/UserContext';
 import UberBlackLogo from '../assets/Uber_logo_2018.png'
 
 const UserSignup = () => {
@@ -10,16 +12,28 @@ const UserSignup = () => {
     const [lastName, setLastName] = useState();
     const [userdata, setUserdata] = useState({});
 
-    const submitHandler = (e) => {
+    const navigate = useNavigate();
+    const {user, setUser} = React.useContext(UserDataContext);
+
+    const submitHandler = async (e) => {
         e.preventDefault(); //to avoid default behaviour when we submiting form that is reloading when form submiting
-        setUserdata({
-            username: {
+        const newUser = {
+            fullname: {
                 firstname: firstName,
                 lastname: lastName
             },
             email: email,
             password: password,
-        })
+        }
+
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/register`, newUser);
+
+        if(response === 201) {
+            const data = response.data;
+            setUser(data.user);
+            localStorage.setItem('token', data.token);
+            navigate('/home');
+        }
         setEmail('');
         setFirstName('');
         setLastName('');
@@ -75,7 +89,7 @@ const UserSignup = () => {
                             setPassword(e.target.value)
                         }}
                     />
-                    <button className='bg-[#111] text-white font-semibold mb-3 rounded px-4 py-2 w-full text-lg placholder:text-base'>Login</button>
+                    <button className='bg-[#111] text-white font-semibold mb-3 rounded px-4 py-2 w-full text-lg placholder:text-base'>Create account</button>
                     <p className='text-center'>Already have a account? <Link to='/login' className='text-blue-600'>Login here</Link></p>
                 </form>
             </div>

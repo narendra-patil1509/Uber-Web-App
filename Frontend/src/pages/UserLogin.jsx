@@ -1,6 +1,8 @@
-import React ,{ useState} from 'react'
-import { Link } from 'react-router-dom'
+import React ,{ useContext, useState} from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { UserDataContext } from '../context/UserContext'
 import UberBlackLogo from '../assets/Uber_logo_2018.png'
+import axios from 'axios'
 
 const UserLogin = () => {
     
@@ -8,15 +10,27 @@ const UserLogin = () => {
     const [password, setPassword] = useState('');
     const [userdata, setUserdata] = useState({});
 
-    const submitHandler = (e) => {
+    const {user, setUser} = useContext(UserDataContext);
+    const navigate = useNavigate();
+
+    const submitHandler = async(e) => {
         e.preventDefault(); //to avoid default behaviour when we submiting form that is reloading when form submiting
-        setUserdata({
+        
+        const userData = {
             email:email,
             password:password
-        })
+        }
+
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`,userData);
+
+        if(response === 200) {
+            const data = response.data;
+            setUser(data.user);
+            localStorage.setItem('token', data.token);
+            navigate('/home');
+        }
         setEmail('');
         setPassword('');
-        console.log(userdata);
     }
 
     return (
