@@ -100,7 +100,7 @@ const Home = () => {
 
   return (
     <div className='h-screen relative overflow-hidden'>
-      <img className='w-16 absolute left-5 top-5' src="" alt="" />
+      <img className='w-16 absolute left-5 top-5' src="https://upload.wikimedia.org/wikimedia/commas/c/cc/Uber_logo_2018.png" alt="" />
       <div className='h-screen w-screen'>
         {/* Image for temporary use */}
         <img src="" alt="" />
